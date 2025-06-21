@@ -1,0 +1,50 @@
+<div class="d-flex flex-column justify-content-center align-items-center position-relative custom-height">
+	<div class="fw-bold position-absolute text-danger" [ngStyle]="{ bottom: '32px' }" *ngIf="notes$ | async as notes">
+		You have {{ notes.length }} Notes
+	</div>
+	<button type="button" class="btn btn-dark rounded-circle btn-lg mb-3" data-bs-toggle="modal" data-bs-target="#addModal">+</button>
+	<div class="fw-bold">Add Note</div>
+<div>
+
+<!-- Modal -->
+<!-- Add Note Modal -->
+<div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addNoteLabel">Add Note</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form #addNoteForm="ngForm">
+          <div class="mb-3">
+            <label for="title" class="form-label">Note Title</label>
+            <input type="text" class="form-control" id="title" name="title" required [(ngModel)]="newNote.title">
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">Note Content</label>
+            <textarea class="form-control" id="content" name="content" rows="3" required [(ngModel)]="newNote.content"></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button
+          type="button"
+          class="btn btn-success w-50"
+          [disabled]="!newNote.title || !newNote.content"
+          (click)="submitNote()">Add
+					@if(isLoading()) {
+					<span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+					}
+				</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
