@@ -2,49 +2,58 @@
 	<div class="fw-bold position-absolute text-danger" [ngStyle]="{ bottom: '32px' }" *ngIf="notes$ | async as notes">
 		You have {{ notes.length }} Notes
 	</div>
-	<button type="button" class="btn btn-dark rounded-circle btn-lg mb-3" data-bs-toggle="modal" data-bs-target="#addModal">+</button>
+	<button type="button" class="btn btn-dark rounded-circle btn-lg mb-3" data-bs-toggle="modal"
+		data-bs-target="#addModal">+</button>
 	<div class="fw-bold">Add Note</div>
-<div>
+	<div>
 
-<!-- Modal -->
-<!-- Add Note Modal -->
-<div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false"
-  tabindex="-1" aria-labelledby="addNoteLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addNoteLabel">Add Note</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+		<!-- Modal -->
+		<!-- Add Note Modal -->
+		<div class="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+			aria-labelledby="addNoteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
 
-      <div class="modal-body">
-        <form #addNoteForm="ngForm">
-          <div class="mb-3">
-            <label for="title" class="form-label">Note Title</label>
-            <input type="text" class="form-control" id="title" name="title" required [(ngModel)]="newNote.title">
-          </div>
-          <div class="mb-3">
-            <label for="content" class="form-label">Note Content</label>
-            <textarea class="form-control" id="content" name="content" rows="3" required [(ngModel)]="newNote.content"></textarea>
-          </div>
-        </form>
-      </div>
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="addNoteLabel">Add Note</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeForm()"
+							aria-label="Close"></button>
+					</div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button
-          type="button"
-          class="btn btn-success w-50"
-          [disabled]="!newNote.title || !newNote.content"
-          (click)="submitNote()">Add
-					@if(isLoading()) {
-					<span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-					}
-				</button>
-      </div>
+					<div class="modal-body">
+						<form class="needs-validation" #addNoteForm="ngForm">
+							<div class="mb-3">
+								<label for="title" class="form-label">Note Title</label>
+								<input type="text" class="form-control" id="title" name="title" required pattern="^[A-Za-z]+$"
+									[(ngModel)]="newNote.title" #title="ngModel">
+								<div class="text-danger mt-2" [ngStyle]="{ fontSize: '12px' }"
+									*ngIf="title.invalid && (title.dirty || title.touched)">
+									<div *ngIf="title.errors?.['required']">Title is required.</div>
+									<div *ngIf="title.errors?.['pattern']">Title must contain only letters.</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="content" class="form-label">Note Content</label>
+								<textarea class="form-control" id="content" name="content" rows="3" required
+									[(ngModel)]="newNote.content" #content="ngModel"></textarea>
+								<div class="text-danger mt-2" [ngStyle]="{ fontSize: '12px' }" *ngIf=" content.invalid && (content.dirty ||
+									content.touched)">
+									<div *ngIf="content.errors?.['required']">Content is required.</div>
+								</div>
+							</div>
+						</form>
+					</div>
 
-    </div>
-  </div>
-</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeForm()">Close</button>
+						<button type="button" class="btn btn-success w-50" [disabled]="!newNote.title || !newNote.content"
+							(click)="submitNote()">Add
+							@if(isLoading()) {
+							<span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+							}
+						</button>
+					</div>
 
+				</div>
+			</div>
+		</div>

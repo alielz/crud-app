@@ -1,32 +1,46 @@
 <div class="container mt-4">
-  <h2>Your Notes</h2>
+	<h2>Your Notes</h2>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-    <div class="col" *ngFor="let note of notes$ | async">
-      <div class="card h-100">
-        <div class="card-body">
-          <ng-container *ngIf="editingNote?.id !== note.id; else editForm">
-            <h5 class="card-title">{{ note.title }}</h5>
-            <p class="card-text">{{ note.content }}</p>
-            <button class="btn btn-sm btn-primary me-2" (click)="startEdit(note)">Edit</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteNote(note.id.toString())">Delete</button>
-          </ng-container>
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+		<div class="col" *ngFor="let note of notes$ | async">
+			<div class="card h-100">
+				<div class="card-body">
+					<ng-container *ngIf="editingNote?.id !== note.id; else editForm">
+						<h5 class="card-title">{{ note.title }}</h5>
+						<p class="card-text">{{ note.content }}</p>
+						<button class="btn btn-sm btn-primary me-2" (click)="startEdit(note)">Edit</button>
+						<button class="btn btn-sm btn-danger" (click)="deleteNote(note.id.toString())">Delete</button>
+					</ng-container>
 
-          <ng-template #editForm>
-            <div class="mb-2">
-              <input class="form-control mb-2" [(ngModel)]="editedTitle" placeholder="Title" />
-              <textarea class="form-control" [(ngModel)]="editedContent" rows="3" placeholder="Content"></textarea>
-            </div>
-            <button class="btn btn-sm btn-success me-2 w-50" (click)="saveEdit()" [disabled]="!editedTitle || !editedContent">
+					<ng-template #editForm>
+						<div class="mb-2">
+							<input class="form-control mb-2" [(ngModel)]="editedTitle" #titleModel="ngModel" placeholder="Title"
+								required pattern="^[A-Za-z]+$" />
+							<div class="text-danger mt-2" [ngStyle]="{ fontSize: '12px' }"
+								*ngIf="titleModel.invalid && (titleModel.dirty || titleModel.touched)">
+								<div *ngIf="titleModel.errors?.['required']">Title is required.</div>
+								<div *ngIf="titleModel.errors?.['pattern']">Title must contain only letters.</div>
+							</div>
+						</div>
+						<div class="mb-2">
+							<textarea class="form-control" [(ngModel)]="editedContent" #contentModel="ngModel" rows="3" required
+								placeholder="Content"></textarea>
+							<div class="text-danger mt-2" [ngStyle]="{ fontSize: '12px' }" *ngIf="contentModel.invalid && (contentModel.dirty ||
+																														contentModel.touched)">
+								<div *ngIf="contentModel.errors?.['required']">Content is required.</div>
+							</div>
+						</div>
+						<button class="btn btn-sm btn-success me-2 w-50" (click)="saveEdit()"
+							[disabled]="!editedTitle || !editedContent">
 							Save
 							@if(isLoading()) {
 							<span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
 							}
 						</button>
-            <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">Cancel</button>
-          </ng-template>
-        </div>
-      </div>
-    </div>
-  </div>
+						<button class="btn btn-sm btn-secondary" (click)="cancelEdit()">Cancel</button>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
